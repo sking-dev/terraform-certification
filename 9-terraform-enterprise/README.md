@@ -1,6 +1,6 @@
 # Objective 9: Understand Terraform Enterprise Capabilities
 
-_What, Pray Tell, is Terraform Enterprise?_
+_What Is "Terraform Enterprise"?_
 
 Terraform Enterprise (TFE) is an **on-premises** distribution of Terraform Cloud  (TFC)
 
@@ -12,7 +12,7 @@ Plus additional **enterprise-grade features** e.g. audit logging / SAML SSO.
 
 _And What About Terraform Cloud?_
 
-TFC is the cloud-hosted version of TFE (_well I never!_)
+TFC is the cloud-hosted version of TFE (_well, I never!_)
 
 NOTE: For most intents and purposes - e.g. this certification exam - you can treat TFE and TFC as (being) **the same product**.
 
@@ -64,7 +64,7 @@ NOTE: For most intents and purposes - e.g. this certification exam - you can tre
 _What Are We Comparing Here?_
 
 ```plaintext
-"OSS" = free open-source CLI to run on a local system.
+"OSS" = free open-source CLI to run on a local system and / or in a pipeline
 
 "TFE" = on-premises Terraform for Teams (formerly known as, Private Terraform Enterprise)
 
@@ -81,7 +81,7 @@ _What Are We Comparing Here?_
 ### Workspaces in TFE
 
 - Offer state management **plus** extra features / capabilities!
-  - Integrate with VCS e.g. GitHub / GitLab
+  - Integrate with Version Control System (VCS) e.g. GitHub / GitLab
     - The workspace construct gets its configuration from source control (repo)
 - A TFE workspace contains the following goodies
   - Terraform configuration
@@ -106,20 +106,20 @@ It has two main "selling points".
 Here's a handy reference list of the features available in TFC!
 
 - **Workspaces**
-  - As per [the section above](###Workspaces)
+  - As per [the section above](###workspaces)
 - **VCS integration**
   - Automate runs of Terraform
   - Planning runs (via Pull Requests)
   - Publish modules to a private registry
 - **Private Module Registry**
-  - Refer back to [the section above](##The-Benefits-of-Sentinel-Registry-and-Workspaces)
+  - Refer back to [the section above](##the-benefits-of-sentinel-registry-and-workspaces)
 - Remote operations
   - Managed disposable VMs to run terraform commands remotely
   - PLUS advanced features like Sentinel policy enforcement and cost estimation
 - Organisations
   - Access control for users / groups / organisations
 - **Sentinel**
-  - Refer back to [the section above](##The-Benefits-of-Sentinel-Registry-and-Workspaces)
+  - Refer back to [the section above](##the-benefits-of-sentinel-registry-and-workspaces)
 - Cost estimation
   - Estimate cost of resources being provisioned by the configuration
 - API
