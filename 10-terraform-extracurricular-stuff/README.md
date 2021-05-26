@@ -25,6 +25,9 @@ The plan is, gather the answers to these questions on the journey to certificati
 - How to import brownfield resources into Terraform configurations?
 - How to write a module?
 - Terraform Cloud - are free accounts / trials available, to have a play around?
+  - Yep, a free tier is available for Terraform Cloud
+    - [Free and Paid Plans > Free Organisations](https://www.terraform.io/docs/cloud/paid.html#free-organizations)
+      - But some features aren't available without a paid upgrade plan
 
 ----
 
