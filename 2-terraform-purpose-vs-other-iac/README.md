@@ -12,7 +12,7 @@ AWS      = CloudFormation
 Azure    = ARM Templates
 GCP      = Cloud Deployment Manager
 
-And this one probably doesn't count:
+Although this one probably doesn't count:
 
 OPC      = Resource Manager *but* this uses Terraform (hurrah!)
 ```
@@ -41,7 +41,7 @@ cloud.
 It also supports other solutions including VMware, Kubernetes, and MySQL.
 
 It provides a common tool, process, and language
-(HCL) that can be used across multiple clouds and services (versus focusing on a specific cloud or service)
+(HCL) that can be used across **multiple clouds and services** (versus focusing on a specific cloud or service)
 
 NOTE: "HCL" stands for, "HashiCorp Configuration Language".
 
@@ -78,17 +78,17 @@ When you create a resource - e.g. a Resource Group in Azure Resource Manager - T
 
 _What Are the Benefits / Functions of State?_
 
-- Idempotence
+- **Idempotence**
   - Terraform uses state to check if the live environment matches the desired configuration
   - This means that **only resources that need to change will be changed** (it will leave all other resources alone)
-- Dependencies
+- **Dependencies**
   - Terraform maintains a list of dependencies in the state file so it can properly deal with dependencies that no longer exist in the current configuration
     - If a naughty team member should happen to delete a resource without using Terraform (e.g. via the Azure Resource Manager portal) Terraform will detect that the resource no longer exists and will reinstate (redeploy) it as per the configuration (code)
       - See <https://www.hashicorp.com/blog/detecting-and-managing-drift-with-terraform> for more information about this type of scenario
-- Performance
+- **Performance**
   - When generating an **execution plan**, Terraform can check resources and their attributes more efficiently via the state file (versus querying each object directly via the cloud provider's API)
     - The benefit / value of this increases as your infrastructure deployment grows
-- Collaboration
+- **Collaboration**
   - State tracks the **version** of an applied configuration
   - It can be stored remotely in a **shared location** to enable team collaboration on deployments
   - State supports **locking** during updates e.g. to avoid conflicts from multiple simultaneous updates
