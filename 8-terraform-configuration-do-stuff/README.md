@@ -161,6 +161,52 @@ Terraform does offer the `any` primitive type: this is where Terraform tries to 
 
 TODO: Give example of collection types (syntax)
 
+```hcl
+# Basic examples.
+
+# Source: https://davemccollough.com/2020/10/10/learning-terraform-part-2-variables-expressions-and-functions/
+
+# 'list' is a zero-based, comma-delimited list encapsulated in square brackets.
+
+variable "vm_size" {
+     type = list
+     default = ["Standard_A1_v2", "Standard_A8_v2", "Standard_A8m_v2"]
+}
+
+# To access an item from a list, include index of (desired) value when referencing variable.
+
+resource "azurerm_linux_virtual_machine" "linux_vm" {
+     name = "linux_vm"
+     resource_group_name = var.rg
+     location = var.location
+     size = var.vm_size[0]
+}
+
+
+# 'map' is a key/value collection.  Can be used to select specific values based on user defined key.
+variable "vm_type" {
+     type = map
+     default = {
+       compute = "Standard_F8s_v2"
+       memory = "Standard_D12_v2"
+       storage = "Standard_L32s_v2"
+     }
+}
+
+# To reference an item from a mapped list, use the key to reference the correct item.
+
+resource "azurerm_linux_virtual_machine" "linux_vm" {
+     name = "linux_vm"
+     resource_group_name = var.rg
+     location = var.location
+     size = var.vm_type["compute"]
+}
+
+----------------
+
+# TODO: Add an example for 'set'.
+```
+
 ### Structural Types
 
 A more complex object where values **can** be of multiple types.
@@ -195,6 +241,27 @@ Most Terraform providers are composed of **data sources** and **resources**.
 
 TODO: Give example(s)
 
+```hcl
+# Basic examples.
+
+# Data source for an existing resource group (created outside of this IaC)
+data "azurerm_resource_group" "sking-dev-example-rg" {
+  name = "rg-sking-dev-example"
+}
+
+# Data source for the remote state file for resources deployed by the "common" module for a given region.
+data "terraform_remote_state" "common" {
+  backend = "azurerm"
+
+  config = {
+    resource_group_name  = "rg-${var.location}-tfstate"
+    storage_account_name = "sa${var.location}tfstate"
+    container_name       = "${var.location}commontfstate"
+    key                  = "terraform.tfstate"
+  }
+}
+```
+
 ### Resources
 
 - These are the raison d'etre of Terraform (_oh la la!_)
@@ -207,8 +274,6 @@ TODO: Give example(s)
     - Many are consequently unknown until the resource is fully created
 - Variables and attributes of **other resources** can be used as arguments for a resource
   - IMPORTANT: The value type exposed by the attribute **must** match the type expected by the argument
-
-TODO: Give some examples of resources.
 
 ### Looping and Multiple Instances
 
@@ -323,7 +388,7 @@ max (number,number,...) = returns number that is largest value of given set
 
 lower (string)          = returns a string in all lowercase
 
-keys (map)              = [TODO: Fill in this gap!]
+keys (map)              = returns a list of the keys in the given map
 
 
 Functions can be combined.
@@ -357,7 +422,7 @@ A `dynamic` block expression => one or more nested blocks.
 
 Values are retrieved from variables.
 
-TODO: Give (and spell) out the example from the study guide (p.102 of PDF)
+TODO: Give (and spell) out the example from the study guide (p.93 of PDF)
 
 A Word to the Wise:
 
