@@ -6,9 +6,9 @@ Terraform Enterprise (TFE) is an **on-premises** distribution of Terraform Cloud
 
 AKA "a **private instance** of Terraform Cloud".
 
-No resource limits!
+- Offers unlimited resources (AKA "no resource limits")
 
-Plus additional **enterprise-grade features** e.g. audit logging / SAML SSO.
+- Plus additional **enterprise-grade features** e.g. audit logging / SAML SSO.
 
 _And What About Terraform Cloud?_
 
@@ -125,7 +125,7 @@ Here's a handy reference list of the features available in TFC!
 - API
   - A subset of TFC features can be accessed via API
 - ServiceNow
-  - Integration possible / available!
+  - Integration is possible / available!
 
 ----
 
