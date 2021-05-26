@@ -56,17 +56,23 @@ Like this (more or less)
 
 ### Flags to Use on Commands
 
-TODO: Confirm which commands these are.
+Available for the following commands.
+
+- `terraform plan`
+- `terraform apply`
 
 ```hcl
--lock=false     [this is not generally a good move...]
+-lock=false       [this is not generally a good move...]
 
--lock-timeout=x [can set the time for Terraform to wait to attain the lock - some backends may take / need more time than others]
+-lock-timeout=x   [can set the time for Terraform to wait to attain the lock - some backends may take / need more time than others]
 ```
 
 The majority of state backends support locking **but** some don't!
 
-TODO: Check which ones don't.
+- Relatively few that don't, though, [according to this post](https://www.phillipsj.net/posts/discussion-of-terraform-backends/)
+  - artifactory
+  - swift
+  - etcd
 
 ----
 
@@ -87,7 +93,7 @@ Example Two:
 _What's the Best Way to Work with Credentials?_
 
 - It's **Not Good** to statically define them within a Terraform configuration
-  - Refreshing credentials - advisable on a regular basis - will require the code to be updated each time
+  - Refreshing credentials - highly advisable, on a regular basis - will require the code to be updated each time
   - Storing credentials in clear text on your local workstation / in source control is a **security risk**
 - _Can I Use Terraform Variables?_
   - No!  
@@ -123,7 +129,26 @@ It's loaded into memory (during Terraform operations) and then flushed after use
 
 This means that sensitive data is **not** stored on local disk.  This A Good Thing if the local system is lost or compromised.
 
-TODO: Get a list of all the currently supported standard backends (there should be ~ 14 in total)
+```plaintext
+Here's a list of all the *currently supported standard backends*.
+
+Source: https://www.terraform.io/docs/language/settings/backends/index.html
+
+- artifactory
+- azurerm
+- consul
+- cos
+- etcd
+- etcdv3
+- gcs
+- http
+- kubernetes
+- manta
+- oss
+- pg
+- s3
+- swift
+```
 
 Remote state can (also) be used as a **data source** : any outputs defined in a configuration can be accessed by using the state file as a data source.
 
@@ -151,7 +176,20 @@ AKA the `backend` block is a **nested block** (within the `terraform` block)
 
 IMPORTANT: Ony one backend can be specified per configuration.
 
-TODO: Give an example here.
+```hcl
+# Basic example.
+
+# Source: https://www.terraform.io/docs/language/settings/backends/azurerm.html
+
+terraform {
+  backend "azurerm" {
+    resource_group_name  = "StorageAccount-ResourceGroup"
+    storage_account_name = "abcd1234"
+    container_name       = "tfstate"
+    key                  = "prod.terraform.tfstate"
+  }
+}
+```
 
 State **cannot** be stored in multiple backends simultaneously or split across different backends.
 
@@ -173,7 +211,9 @@ _How So?  Give Me Some Options!_
 2. Using the `-backend-config` flag + a set of key/value pairs
 3. Using the `-backend-config` flag + a path to a file holding the set of key/value pairs
 
-Some backend arguments [TODO: which ones?] can be sourced from environment variables.
+Some backend arguments can be sourced from environment variables.
+
+- _Allegedly, that is - I haven't been able to confirm this in the official documentation set_
 
 After running `terraform init`, the values are stored in a local file in the `.terraform` directory so **do not** store this directory in source control!
 
