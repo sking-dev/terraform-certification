@@ -34,7 +34,8 @@ _What Does It Do?_
 
 - Prepares state storage
   - Local **or** remote backend
-  - Verifies access but does **not** generate (write) state
+  - Verifies access
+    - But does **not** generate (write) state
 - Retrieves modules
   - Any module used by the configuration is placed in the configuration directory
 - Retrieves plugins
@@ -42,9 +43,15 @@ _What Does It Do?_
 
 This command can be rerun safely at any time BUT it only **needs** to be run again in the following scenarios.
 
-- A new module / provider / provisioner is added
-- The required version for a module / provider / provisioner is updated
-- The configured backend is changed
+- A **new instance is added** of any of the following
+  - Module
+  - Provider
+  - Provisioner
+- The **required version is updated** for any of the following
+  - Module
+  - Provider
+  - Provisioner
+- The **configured backend is changed**
 
 ### Arguments for terraform init
 
@@ -53,7 +60,7 @@ This command can be rerun safely at any time BUT it only **needs** to be run aga
 
 -input
 
--plugin-dir = set directory for required plugins => prevents automatic installation (useful for regulated / highly secure environments)
+-plugin-dir = set directory for required plugins - this prevents automatic installation - useful for regulated / highly secure environments
 
 -upgrade = set to "true" to force update to newest version of module / plugin allowed by constraints + update the lock file ('.terraform.lock.hcl' in version 0.14 onwards)
 
@@ -75,19 +82,45 @@ This command provides a **syntax check** that returns:
 - Errors
   - For invalid syntax
 
-It does **not** check the formatting (you should use `terraform fmt` for this)
+It does **not** check the formatting.
+  
+- You should use `terraform fmt` for this
 
-It can be run explicitly OR implicitly (it gets run automatically during `terraform plan` and `terraform apply` operations)
+It can be run explicitly.
+
+OR implicitly.
+
+- It gets run automatically during `terraform plan` and `terraform apply` operations
 
 You must run `terraform init` before attempting to use `terraform validate`.
 
 _Why Is That, Then?_
 
-The validation checks syntax for modules / providers / provisioners so Terraform must have access to these plugins to be able to interact with their syntax e.g. to check which arguments and values are valid / invalid.
+The validation checks syntax for modules / providers / provisioners, so Terraform must have access to these plugins to be able to interact with their syntax e.g. to check which arguments and values are valid / invalid.
 
 NOTE: Be aware that `terraform validate` may pass invalid values if they conform to the 'string' type - "invalid" as in, not supported by the cloud provider resources.
 
-TODO: Look at how to use the `validation` block in Terraform 0.13 onwards to gain more control over input values.
+It doesn't appear to be within in the scope of the exam, but you use the `validation` block in Terraform 0.13 onwards to gain more control over input values.
+
+```hcl
+# Basic example.
+
+# Source: https://www.hashicorp.com/blog/custom-variable-validation-in-terraform-0-13
+
+# Define a condition for the variable 'ami_id' which requires the id to begin with the string "ami".
+
+variable "ami_id" {
+      type = string
+
+      validation {
+        condition = (
+          length(var.ami_id) > 4 &&
+          substr(var.ami_id, 0, 4) == "ami-"
+        )
+        error_message = "The ami_id value must start with \"ami-\"."
+      }
+    }
+```
 
 ----
 
@@ -97,7 +130,9 @@ TODO: Look at how to use the `validation` block in Terraform 0.13 onwards to gai
 terraform plan
 ```
 
-This commands includes syntax validation (equivalent to `terraform validate`)
+This commands includes syntax validation.
+
+- Equivalent to running `terraform validate`
 
 It refreshes the state (checks the live environment)
 
