@@ -29,11 +29,22 @@ Source: <https://www.terraform.io/docs/cli/commands/fmt.html>
 
 NOTE: I'm not convinced that "canonical format" is the right term to use here; to put it another way, this command rewrites your configuration so it adheres to HashiCorp's style guide / coding conventions for Terraform.
 
-_Why Do That?_
+_Why Is This Command Useful?_
 
 **Consistent formatting** adds value to shared / collaborative code!
 
-TODO: Add an example of how this can be used on local workstation / in pipeline.
+Here's an example of how `terraform fmt` might be used in a build (CI) pipeline to be run by Azure DevOps Services.
+
+```yaml
+    # Static analysis part one: style convention check using 'terraform fmt'.
+    - task: TerraformCLI@0
+      displayName: 'Run terraform fmt'
+      inputs:
+        command: 'fmt'
+        # TODO: Replace explicit folder path component with variable, but need to establish the syntax for this.
+        workingDirectory: '$(System.DefaultWorkingDirectory)/azure/terraform/common/uksouth'
+        commandOptions: '-check=true -write=false -diff=true'
+```
 
 ----
 
