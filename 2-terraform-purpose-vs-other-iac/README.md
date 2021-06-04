@@ -90,13 +90,13 @@ _What Are the Benefits / Functions of State?_
     - If a naughty team member should happen to delete a resource without using Terraform (e.g. via the Azure Resource Manager portal) Terraform will detect that the resource no longer exists and will reinstate (redeploy) it as per the configuration (code)
       - See <https://www.hashicorp.com/blog/detecting-and-managing-drift-with-terraform> for more information about this type of scenario
 - **Performance**
-  - When generating an **execution plan**, Terraform can check resources and their attributes more efficiently via the state file (
+  - When generating an **execution plan**, Terraform can check resources and their attributes more efficiently via the state file
     - Versus querying each object directly via the cloud provider's API
       - The benefit / value of this increases as your infrastructure deployment grows
 - **Collaboration**
   - State tracks the **version** of an applied configuration
   - It can be stored remotely in a **shared location** to enable team collaboration on deployments
-  - State supports **locking** during updates 
+  - State supports **locking** during updates
     - E.g. to avoid conflicts from multiple simultaneous updates
 
 ----
