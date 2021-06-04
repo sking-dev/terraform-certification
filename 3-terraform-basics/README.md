@@ -1,12 +1,20 @@
 # Objective 3: Understand Terraform Basics
 
-## Terraform Installation
+## 3A: Handle Terraform and Provider Installation and Versioning
 
-Terraform is made available as a single executable binary.  
+### Terraform Installation
 
-It's supported by a variety of operating systems: Linux, macOS, Oracle Solaris, Unix, and Windows.
+Terraform is made available as a **single executable binary**.  
 
-### How to Install Terraform On a Windows System
+It's supported by a variety of operating systems:
+
+- Linux
+- macOS
+- Oracle Solaris
+- Unix
+- Windows
+
+#### How to Install Terraform On a Windows System
 
 For the purposes of this exam, there are two possible ways to do this.
 
@@ -52,17 +60,20 @@ choco install terraform --version=0.13.5
 
 ----
 
-## Provider Installation
+### Provider Installation
 
 A provider is an **executable plugin**.
 
 It interacts with the **API** of the relevant service e.g. AWS or Azure.
 
-It can be **explicitly defined** within the configuration.
+- It can be **explicitly defined**
+  - Within the configuration
+- Or **implicitly defined**
+  - Via (the presence of) a resource / data source that uses the provider
 
-OR **implicitly defined** via (the presence of) a resource / data source that uses the provider.
+----
 
-### The provider Block
+#### The provider Block
 
 See the accompanying [sample Terraform configuration](provider.tf) to get an idea of what this looks like.
 
@@ -70,7 +81,9 @@ As you'll see, it can include **authentication** information.
 
 NOTE: The `version` argument in the `provider` block is now deprecated, so use a `required_providers` block instead.
 
-### The required_providers Block
+----
+
+#### The required_providers Block
 
 See the accompanying [sample Terraform configuration](provider.tf) to get an idea of what this looks like.
 
@@ -82,16 +95,18 @@ _Hang On..!  What Are Root and Child Modules?_
 
 Fear not!  All will be revealed in [Objective 5](../5-terraform-modules/README.md) .
 
-## Provider Versioning
+----
+
+### Provider Versioning
 
 The version number syntax is as follows.
 
-|Argument  | What It Means                                     |
-|----------|---------------------------------------------------|
-|>= 1.40.0 | Greater than OR equal to                          |
-|<= 1.40.0 | Less than OR equal to                             |
-|~> 1.40.0 | Any (minor) version within 1.40.x (release) range |
-|>= 1.20, <= 1.41 | Any version between 1.20 and 1.41          |
+| Argument         | What It Means                                         |
+| ---------------- | ----------------------------------------------------- |
+| >= 1.40.0        | Greater than OR equal to                              |
+| <= 1.40.0        | Less than OR equal to                                 |
+| ~> 1.40.0        | Any (minor) version within the 1.40.x (release) range |
+| >= 1.20, <= 1.41 | Any version between 1.20 and 1.41                     |
 
 _What's the Best Way to Handle the Provider Version?_
 
@@ -107,7 +122,7 @@ version = "=2.59.0"
 
 If you choose any of the other, more "liberal" syntax options, there could be a risk of breaking changes being introduced from team members / pipelines using an earlier or later version.
 
-### Lock File
+#### Lock File
 
 As of Terraform 0.14, we have the `.terraform.lock.hcl` file.
 
@@ -119,15 +134,18 @@ To update the lock file versions e.g. when you need to change the configuration-
 
 ----
 
-## What the Flip is Plugin-based Architecture?
+## 3B: Describe Plug-in Based Architecture
 
 The Terraform binary does **not** include code to interact with providers and provisioners!
 
 _Why Not?_
 
-It's to keep the binary lean AND to keep provider / provisioner updates independent of the core application.
+Two main reasons:
 
-It also has some extra benefits.
+- To keep the binary lean
+- To keep provider / provisioner updates independent of the core application
+
+It also provides some extra benefits.
 
 - Reduces the potential attack surface
 - Enables easier debugging of core code
@@ -136,7 +154,7 @@ It also has some extra benefits.
 
 ----
 
-## Multiple Providers
+## 3C: Demonstrate Using Multiple Providers
 
 A Terraform configuration supports:
 
@@ -153,7 +171,7 @@ See the accompanying [sample Terraform configuration](provider-multiple.tf) to g
 
 ----
 
-## How Terraform Finds and Fetches Providers
+## 3D: Describe How Terraform Finds and Fetches Providers
 
 The way that Terraform finds and fetches providers has changed over time.
 
@@ -187,7 +205,7 @@ individuals
 
 ----
 
-## When and How to Use Provisioners
+## 3E: Explain When to Use and Not Use Provisioners and When to Use local-exec Or remote-exec
 
 IMPORTANT: The use of provisioners is **not** recommended by HashiCorp!
 
@@ -207,6 +225,7 @@ resource "aws_instance" "web" {
 
 # Source: https://www.edureka.co/community/78251/how-does-local-exec-provisioner-work-in-terraform
 
+----
 
 # The *remote-exec provisioner* invokes a script on a remote resource after it's been created e.g. to run a configuration management tool.  
 # In this example, it's being used to install an application on a Linux-based AWS EC2 instance.
