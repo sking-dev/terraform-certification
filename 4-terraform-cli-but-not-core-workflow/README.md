@@ -1,26 +1,54 @@
 # Objective 4: Use the Terraform CLI (Outside of Core Workflow)
 
-## To Get Help
+## Understand the Help Command (terraform help)
+
+_This command is not included in HashiCorp's Study Guide or Exam review, but it is covered in the Leanpub exam preparation guide._
 
 Terraform has a **built-in help system** which is accessed via the **CLI**.
 
-```hcl
+```powershell
 # To see all of Terraform’s top-level commands.
-
 terraform -help
 
 
 # Append `-help` to the particular command you're interested in.
-
 terraform plan -help
 ```
 
 ----
 
-## To Format Code
+## 4A: Choose When to Use terraform fmt to Format Code
 
-```hcl
-terraform fmt
+```powershell
+terraform fmt -help
+
+Usage: terraform [global options] fmt [options] [DIR]
+
+        Rewrites all Terraform configuration files to a canonical format. 
+        Both configuration files (.tf) and variables files (.tfvars) are updated.
+        JSON files (.tf.json or .tfvars.json) are not modified.
+
+        If DIR is not specified then the current working directory will be used.
+        If DIR is "-" then content will be read from STDIN. The given content must
+        be in the Terraform language native syntax; JSON is not supported.
+
+Options:
+
+  -list=false    Don't list files whose formatting differs
+                 (always disabled if using STDIN)
+
+  -write=false   Don't write to source files
+                 (always disabled if using STDIN or -check)
+
+  -diff          Display diffs of formatting changes
+
+  -check         Check if the input is formatted. Exit status will be 0 if all
+                 input is properly formatted and non-zero otherwise.
+
+  -no-color      If specified, output won't contain any color.
+
+  -recursive     Also process files in subdirectories. By default, only the
+                 given directory (or current directory) is processed.
 ```
 
 _The `terraform fmt` command is used to rewrite Terraform configuration files [.TF and .TFVARS] to a canonical format and style. This command applies a subset of the Terraform language style conventions, along with other minor adjustments for readability._
@@ -48,9 +76,9 @@ Here's an example of how `terraform fmt` might be used in a build (CI) pipeline 
 
 ----
 
-## To Taint Terraform Resources
+## 4B: Choose When to Use terraform taint to Taint Terraform Resources
 
-```hcl
+```powershell
 terraform taint
 
 terraform untaint
@@ -68,9 +96,9 @@ To put it another way, the tainted resource will be destroyed and then (re)creat
 
 ----
 
-## To Import Existing Infrastructure
+## 4C: Choose When to Use terraform import to Import Existing Infrastructure Into Your Terraform State
 
-```hcl
+```powershell
 terraform import
 ```
 
@@ -110,9 +138,9 @@ TODO: Try this out and report back!
 
 ----
 
-## To Use a Terraform Workspace
+## 4D: Choose When to Use terraform workspace to Create Workspaces
 
-```hcl
+```powershell
 terraform workspace
 
 ... new
@@ -136,9 +164,9 @@ NOTE: See [Objective 9 for more on workspaces](../9-terraform-enterprise/README.
 
 ----
 
-## To Work With Terraform State
+## 4E: Choose When to Use terraform state to View Terraform State
 
-```hcl
+```powershell
 terraform state
 
 ... list
@@ -155,7 +183,7 @@ IMPORTANT: Don't edit (the) state files directly!
 
 ----
 
-## To Log Verbosely
+## 4F: Choose When to Enable Verbose Logging and What the Outcome /Value Is
 
 _Terraform has detailed logs which can be enabled by setting the TF_LOG environment variable to any value. This will cause detailed logs to appear on stderr._
 
