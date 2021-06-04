@@ -2,11 +2,27 @@
 
 ## 1A: Explain What IaC Is
 
-### A Definition of "IaC"
+### In Search of a Definition of "IaC"
 
-IaC describes infrastructure using a high-level configuration syntax.  
+```plaintext
+The HashiCorp definition:
 
-This provides a blueprint of the data centre which can be versioned and managed as per any other code, plus it can also be shared and reused as required.
+[IaC] is the process of managing infrastructure in a file or files rather than manually configuring resources in a user interface. A resource in this instance is any piece of infrastructure in a given environment, such as a virtual machine, security group, network interface, etc.
+
+Source: https://learn.hashicorp.com/tutorials/terraform/infrastructure-as-code
+
+----
+
+[IaC] is a practice in which infrastructure is provisioned and managed using code and software development techniques, such as version control and continuous integration. The cloud’s API-driven model enables developers and system administrators to interact with infrastructure programmatically, and at scale, instead of needing to manually set up and configure resources. Thus, engineers can interface with infrastructure using code-based tools and treat infrastructure in a manner similar to how they treat application code. Because they are defined by code, infrastructure and servers can quickly be deployed using standardized patterns, updated with the latest patches and versions, or duplicated in repeatable ways.
+
+Source: https://aws.amazon.com/devops/what-is-devops/
+
+----
+
+[IaC] is the management of infrastructure (networks, virtual machines, load balancers, and connection topology) in a descriptive model, using the same versioning as DevOps team uses for source code. Like the principle that the same source code generates the same binary, an IaC model generates the same environment every time it is applied. IaC is a key DevOps practice and is used in conjunction with continuous delivery.
+
+Source: https://docs.microsoft.com/en-us/devops/deliver/what-is-infrastructure-as-code
+```
 
 ----
 
@@ -15,8 +31,8 @@ _Why Did IaC Become "A Thing"?_
 The adoption of **cloud** is the big driver for IaC.
 
 - Everything is **API-driven**
-- Infrastructure **lifespan** is (much) shorter
-- The **scale** of infrastructure is (much) greater
+- Infrastructure **lifespan** is shorter
+- The **scale** of infrastructure is greater
 - There's a requirement for **elasticity**
   - To scale up
     - Meet demand / performance needs
@@ -34,7 +50,8 @@ _What Else Does It Offer?_
   - Versus the scripts of yesteryear that only machines could read
 - It promotes **reusability**
   - E.g. modules
-- It also provides **documentation** in and of itself, as the code describes the infrastructure
+- It provides **documentation** (in and of itself)
+  - The code describes the infrastructure
   
 ----
 
@@ -42,17 +59,17 @@ _What Else Does It Offer?_
 
 ### IaC Makes Infrastructure More Reliable
 
-IaC has the following qualities / benefits.
+IaC provides the following benefits.
 
 - **Idempotent**
   - Code can be (re)applied multiple times and it will always give the **same outcome**
 - **Consistent**
-  - Versus human agent creating variations / omissions in workflow steps
+  - Versus a human agent (inadvertently) generating variations / omissions in workflow steps
   - Infrastructure can be mirrored across environments and cloud regions
 - **Repeatable**
-  - Versus human agent (see above)
+  - Versus human agent workflow (see above)
 - **Predictable**
-  - Versus human agent (see above)
+  - Versus human agent workflow (see above)
   - Test and review code before deployment
 - **Automation-friendly**
   - Supports deployment at scale
@@ -65,4 +82,4 @@ It improves **efficiency** and **lowers risk and costs**.
 
 ----
 
-## End of Objective One
+## End of Objective 1
