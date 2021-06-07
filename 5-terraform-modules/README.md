@@ -14,13 +14,12 @@ NOTE: Each of these components is optional rather than mandatory.
 
 Any directory containing Terraform files can effectively be classed as a module.
 
-However - when you're **using modules explicitly** - there are two types to consider.
+But - when you're **using modules explicitly** - there are **two types** to consider.
 
-|Module Type  |What Is It For?                                   |
-|-------------|-------------------------------------------------|
-|Root module  |The principal configuration e.g. the main configuration for an environment / subscription.                |
-|Child module |Invoked by the root module to handle a specific configuration task.  A child module **can** invoke another child module.                                                         |
-|_N/A_          | TODO: Make this table look nicer!                                                          |
+| Module Type  | What Is It For?                                                                                                          |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| Root module  | The principal configuration e.g. the main configuration for an environment / subscription.                               |
+| Child module | Invoked by the root module to handle a specific configuration task.  A child module **can** invoke another child module. |
 
 The module that's doing the invoking can be referred to as, the **calling module**.
 
@@ -28,11 +27,11 @@ The module being invoked can be referred to as, the **child module**.
 
 ----
 
-## Module Source Options
+## 5A: Contrast Module Source Options
 
 Basically, Terraform needs to know, where are your module's files stored?  
 
-AKA "What's the source of the module?"
+To put it another way, what's the source of the module?
 
 There are a number of options:
 
@@ -57,27 +56,27 @@ _What About Rolling Your Own Modules?_
 
 Terraform best practice:
 
-- Store your modules locally **if** they're tightly coupled to your configuration
-- **Else** store them in a **shared location**
+- Store your modules **locally** IF they're tightly coupled to your configuration
+- ELSE store them in a **shared location**
   - This location can be public **or** private
-  - Your modules can then be **reused** across projects / teams.
+    - Your modules can then be **reused** across projects / teams
 
 ----
 
-## Module Inputs and Outputs
+## 5B: Interact With Module Inputs and Outputs
 
 ### Input Variables
 
-These **act as parameters** for a module:
+These act as **parameters** for a module.
 
 - They enable customisation **without** modifying the module's code
-- PLUS the module can be **shared** between different configurations
+- The module can be **shared** between different configurations
 
 _Where Are They Defined?_
 
 Variables in a root module:
 
-- You set the values via CLI options **or** environment variables
+- You set the values via CLI options OR environment variables
 
 Variables in a child module:
 
@@ -198,7 +197,7 @@ resource "azurerm_route_table" "sking_dev_example_route_table" {
 
 ----
 
-## Variable Scope Within Modules
+## 5C: Describe Variable Scope Within Modules / Child Modules
 
 A local value defined in a module is **only** available in the context of that module.
 
@@ -208,7 +207,7 @@ Child modules cannot access a variable defined in a calling module unless it's *
 
 ----
 
-## The Public Module Registry
+## 5D: Discover Modules From the Public Terraform Module Registry
 
 The best example of a public registry is [Terraform Registry](https://registry.terraform.io/) .
 
@@ -222,7 +221,7 @@ Terraform best practice:
 
 ----
 
-## Defining Module Version
+## 5E: Defining Module Version
 
 Terraform best practice:
 
