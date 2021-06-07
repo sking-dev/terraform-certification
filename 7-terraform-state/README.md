@@ -7,7 +7,7 @@ Terraform follows the **desired state configuration** model.
 _What Does That Mean?_
 
 - The **configuration** describes the environment (infrastructure) to build
-- It uses **declarative code** to do this
+  - It uses **declarative code** to do this
 - Terraform deploys the **desired state**
 
 ```plaintext
@@ -20,13 +20,13 @@ Terraform uses state (a JSON-formatted data structure) to *track this mapping*.
 
 ----
 
-## Default Local Backend
+## 7A: Describe Default Local Backend
 
-If no explicit backend configuration is provided, Terraform defaults to using the **local file system** to store state.
+IF no explicit backend configuration is provided, Terraform defaults to using the **local file system** to store state.
 
 A file called `terraform.tfstate` will be created in the root module (working directory)
 
-You can alter the location for this file by using the `-state=statefile` flag when running `terraform plan` or `terraform apply`.
+You can change the location for this file by using the `-state=statefile` argument when running `terraform plan` or `terraform apply`.
 
 ```plaintext
 NOTE: 
@@ -40,7 +40,7 @@ E.g.
 
 ----
 
-## State Locking
+## 7B: Outline State Locking
 
 This is a very important concept!
 
@@ -54,29 +54,37 @@ Like this (more or less)
   - Terraform checks, is the state (already) locked?
     - If it isn't locked, Terraform then locks the state before making the user's changes
 
-### Flags to Use on Commands
+----
+
+### Options to Use on Terraform Commands
 
 Available for the following commands.
 
 - `terraform plan`
 - `terraform apply`
 
-```hcl
--lock=false       [this is not generally a good move...]
+```bash
+# Set to "false" if you do *not* want to lock the state file.
+# NOTE: This is not generally a good move!
+-lock=false
 
--lock-timeout=x   [can set the time for Terraform to wait to attain the lock - some backends may take / need more time than others]
+# Set the duration for Terraform to wait to attain the lock.
+# Some backends may take / need more time than others.
+-lock-timeout=0s
 ```
 
-The majority of state backends support locking **but** some don't!
+----
 
-- Relatively few that don't, though, [according to this post](https://www.phillipsj.net/posts/discussion-of-terraform-backends/)
+The majority of state backends support locking BUT some do not!
+
+- There are relatively few that do not, though, [according to this post](https://www.phillipsj.net/posts/discussion-of-terraform-backends/)
   - artifactory
   - swift
   - etcd
 
 ----
 
-## Backend State Authentication Methods
+## 7C: Handle Backend State Authentication Methods
 
 Some backends require **authentication** and **authorisation** to access state data.
 
@@ -90,35 +98,38 @@ Example Two:
 - MySQL
   - Database credentials
 
+----
+
 _What's the Best Way to Work with Credentials?_
 
 - It's **Not Good** to statically define them within a Terraform configuration
-  - Refreshing credentials - highly advisable, on a regular basis - will require the code to be updated each time
+  - Refreshing credentials - highly advisable, on a regular basis - will require your code to be updated each time
   - Storing credentials in clear text on your local workstation / in source control is a **security risk**
 - _Can I Use Terraform Variables?_
   - No!  
     - The backend is evaluated during `terraform init` so this happens **before** any variables are loaded / evaluated
 - _So What's the Answer?_
   - You can use a **partial backend configuration** in the root module and provide the rest of the information at **runtime**
-    - See [the section below](##the-backend-block) on the `backend` configuration block
+    - See [the section below](###the-backend-block) on the `backend` configuration block
 
 ----
 
-## Remote State Storage and Supported Standard Backends
+## 7D: Describe Remote State Storage Mechanisms and Supported Standard Backends
 
 Use a **remote state backend** to enable collaborative working.
 
-Cf. the default local backend (which) can only really support a single user.
+Cf. the default local backend which can only really support a single user.
 
 State data is stored in a **remote shared location**.
 
 There are two classes of backends.
 
 ```plain text
-1. Standard = includes state management *and* locking (*if* supported by the chosen backend)
+1. Standard = includes state management *and* locking (IF supported by the chosen backend)
 
 2. Enhanced =  includes remote operations in addition to the standard features (this class is available with Terraform Cloud and Terraform Enterprise)
 
+----
 
 NOTE: "Remote operations" are where Terraform operations like 'terraform plan' and 'terraform apply' are run on the remote service instead of locally.
 ```
@@ -127,12 +138,12 @@ State data in a remote backend is **not** written to disk on your local system.
 
 It's loaded into memory (during Terraform operations) and then flushed after use.
 
-This means that sensitive data is **not** stored on local disk.  This A Good Thing if the local system is lost or compromised.
+This means that sensitive data is **not** stored on local disk.
+
+This A Good Thing if the local system is lost or compromised.
 
 ```plaintext
 Here's a list of all the *currently supported standard backends*.
-
-Source: https://www.terraform.io/docs/language/settings/backends/index.html
 
 - artifactory
 - azurerm
@@ -148,33 +159,39 @@ Source: https://www.terraform.io/docs/language/settings/backends/index.html
 - pg
 - s3
 - swift
+
+Source: https://www.terraform.io/docs/language/settings/backends/index.html
 ```
 
-Remote state can (also) be used as a **data source** : any outputs defined in a configuration can be accessed by using the state file as a data source.
+Remote state can (also) be used as a **data source**.
+
+- Any outputs defined in a configuration can be accessed by using the state file as a data source
 
 ----
 
-## The Effect of Terraform Refresh on State
+## 7E: Describe the Effect of Terraform Refresh on State
 
 _What Does the Refresh Action Do?_
 
 It examines the attributes of resources in the target environment and compares them to the values that are stored in state.
 
-Refresh may need to update state tp reflect the target environment **but** it won't (cannot) alter the target infrastructure.
+Refresh may need to update state tp reflect the target environment BUT it won't (cannot) alter the target infrastructure.
 
-It's run automatically during a `terraform plan` **or** a `terraform apply` **if** these commands are run without a supplied execution plan.
+It's run automatically during a `terraform plan` OR a `terraform apply` IF these commands are run without a supplied execution plan.
 
 You can trigger a refresh manually using the `terraform refresh` command.
 
 ----
 
-## The Backend Block
+## 7F: Describe Backend Block In Configuration and Best Practices for Partial Configurations
+
+### The Backend Block
 
 Backend configuration is defined within the `terraform` block of the root module.
 
-AKA the `backend` block is a **nested block** (within the `terraform` block)
+- The `backend` block is a **nested block** (within the `terraform` block)
 
-IMPORTANT: Ony one backend can be specified per configuration.
+IMPORTANT: Only one backend can be specified per configuration.
 
 ```hcl
 # Basic example.
@@ -193,17 +210,17 @@ terraform {
 
 State **cannot** be stored in multiple backends simultaneously or split across different backends.
 
-- If you need to do this, you should split out your configuration into interdependent configurations.
+- If you need to do this, you should split out your configuration into interdependent configurations
 
 ----
 
-## Best Practice for Partial Backend Configurations
+### Best Practice for Partial Backend Configurations
 
 Omit the settings that should be dynamically configured.
 
 E.g. for the `azurerm` backend, this would be the values for `storage_account_name` and `access_key`.
 
-These can be supplied at runtime.
+These can then be supplied at **runtime**.
 
 _How So?  Give Me Some Options!_
 
@@ -213,15 +230,16 @@ _How So?  Give Me Some Options!_
 
 Some backend arguments can be sourced from environment variables.
 
-- _Allegedly, that is - I haven't been able to confirm this in the official documentation set_
+- _Allegedly, that is_
+  - _I haven't been able to confirm this in the official documentation set_
 
 After running `terraform init`, the values are stored in a local file in the `.terraform` directory so **do not** store this directory in source control!
 
 ----
 
-## Secret Management in State Files
+## 7G: Understand Secret Management in State Files
 
-State data is **not** encrypted by Terraform **but** it can (should) sit on an encrypted storage platform.
+State data is **not** encrypted by Terraform BUT it can (should) sit on an encrypted storage platform.
 
 - Data encryption at rest **and** in transit
   - This will provide a level of protection for any sensitive data held in state
