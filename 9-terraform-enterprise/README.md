@@ -14,11 +14,17 @@ _And What About Terraform Cloud?_
 
 TFC is the cloud-hosted version of TFE (_well, I never!_)
 
-NOTE: For most intents and purposes - e.g. this certification exam - you can treat TFE and TFC as (being) **the same product**.
+----
+
+```plaintext
+NOTE: 
+
+For most intents and purposes - e.g. this certification exam - you can treat TFE and TFC as (being) *the same product*.
+```
 
 ----
 
-## The Benefits of Sentinel, Registry, and Workspaces
+## 9A: Describe the Benefits of Sentinel, Registry, and Workspaces
 
 ### Sentinel
 
@@ -59,16 +65,16 @@ NOTE: For most intents and purposes - e.g. this certification exam - you can tre
 
 ----
 
-## OSS Workspaces Versus TFE Workspaces
+## 9B: Differentiate OSS and Terraform Cloud Workspaces
 
 _What Are We Comparing Here?_
 
 ```plaintext
 "OSS" = free open-source CLI to run on a local system and / or in a pipeline
 
-"TFE" = on-premises Terraform for Teams (formerly known as, Private Terraform Enterprise)
-
 "TFC" = hosted Terraform for Teams (formerly known as, Terraform Enterprise)
+
+"TFE" = on-premises Terraform for Teams (formerly known as, Private Terraform Enterprise)
 ```
 
 ### Workspaces in OSS
@@ -78,7 +84,7 @@ _What Are We Comparing Here?_
   - No help with other aspects of a configuration e.g. the values submitted for variables OR logs of previous actions
 - To submit different values for each workspace --> (you have to) factor this into the logic of your pipeline / script
 
-### Workspaces in TFE
+### Workspaces in TFC / TFE
 
 - Offer state management **plus** extra features / capabilities!
   - Integrate with Version Control System (VCS) e.g. GitHub / GitLab
@@ -101,7 +107,7 @@ It has two main "selling points".
 
 ----
 
-## Summarise Features of TFC / TFE
+## 9C: Summarise Features of Terraform Cloud
 
 Here's a handy reference list of the features available in TFC!
 
