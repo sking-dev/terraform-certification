@@ -1,15 +1,16 @@
 # Objective 8: Read, Generate, and Modify Configuration
 
-## Variables and Outputs
+## 8A: Demonstrate Use of Variables and Outputs
 
 ### Input Variables
 
 Input variables are how values are submitted to a Terraform configuration.
 
-- Supply the value at runtime
-  - [See the section below](###how-to-submit-values-for-variables) for more details on this
-- OR
-- Set the default value for the variable to use
+- Option One
+  - Supply the value at runtime
+    - [See the section below](###how-to-submit-values-for-variables) for more details on this
+- Option Two
+  - Set the default value for the variable to use
 
 NOTE: If no default value is set, Terraform will require one to be supplied at runtime.
 
@@ -25,7 +26,7 @@ variable "aws_region" {
 
 Supplying the data `type` enables Terraform to do some basic validation on the value being supplied.
 
-NOTE: Terraform 0.13. onwards offers variable validation: you can add a `validation` block (into the `variable` block) that must evaluate to true / false.
+NOTE: Terraform 0.13 onwards offers variable validation: you can add a `validation` block (into the `variable` block) that must evaluate to "true" / "false".
 
 ### How to Submit Values for Variables
 
@@ -38,7 +39,9 @@ _What Are the Available Options?_
 5. Use `-var` flag + your key/value pairs
 6. Type 'em in at the CLI when prompted by Terraform
 
-NOTE: These options are listed in descending order of precedence AKA "the order of evaluation".  A value could potentially be supplied in multiple places **but** a value from option 5 would take precedence over a value from option 1.
+NOTE: These options are listed in descending order of precedence AKA "the order of evaluation".  
+
+A value could potentially be supplied in multiple places BUT a value from option 5 would take precedence over a value from option 1.
 
 ----
 
@@ -69,7 +72,7 @@ output "name_of_output" {
     value       = wibble.wobble
     description = "What is this for?"
     # Value not printed to CLI if "true"
-    sensitive   = true/false
+    sensitive   = true / false
     depends_on  = [list of resources in explicit chain of dependence]
 }
 ```
@@ -80,7 +83,7 @@ NOTE: If you subsequently change existing outputs or add any new outputs, you'll
 
 ----
 
-## Secure Secret Injection Best Practice
+## 8B: Describe Secure Secret Injection Best Practice
 
 A Golden Rule:
 
@@ -106,11 +109,11 @@ A Golden Rule:
 - Remember...
   - Any sensitive data in a Terraform configuration will end up being stored in Terraform state
     - So store this state in a secure backend that supports encryption at rest
-    - And don't store any local state files in source control!
+    - And **do not** store any local state files in source control!
 
 ----
 
-## Collection and Structural Types
+## 8C: Understand the Use of Collection and Structural Types
 
 ### A Brief Overview of the Data Types Available in Terraform
 
@@ -158,8 +161,6 @@ A Golden Rule:
 - All values in a collection must be of the **same primitive type**
 
 Terraform does offer the `any` primitive type: this is where Terraform tries to figure out the intended type **but** it's usually better to be prescriptive with input values, otherwise you may not get your desired structure.
-
-TODO: Give example of collection types (syntax)
 
 ```hcl
 # Basic examples.
@@ -227,7 +228,7 @@ If you do, you should use a **structural type**.
 
 ----
 
-## Data Configuration Versus Resource Configuration
+## 8D: Create and Differentiate Resource and Data Configuration
 
 Most Terraform providers are composed of **data sources** and **resources**.
 
@@ -238,8 +239,6 @@ Most Terraform providers are composed of **data sources** and **resources**.
 - Most data sources require some configuration for them to be able to provide the information you're after
 - They also assume that the `provider` is correctly configured
   - [See Objective 3](../3-terraform-basics/README.md##provider-installation) for more details on this
-
-TODO: Give example(s)
 
 ```hcl
 # Basic examples.
@@ -329,7 +328,7 @@ TODO: Give a better (preferably real world) example.
 
 ----
 
-## Connecting Resources Via Resource Addressing and Resource Parameters
+## 8E: Use Resource Addressing and Resource Parameters to Connect Resources Together
 
 The resources in a Terraform configuration will often be inter-related.  
 
@@ -363,7 +362,7 @@ E.g.
 
 ----
 
-## Terraform Built-in Functions
+## 8F: Use Terraform Built-in Functions to Write Configuration
 
 The **format** of data returned by data sources / resources may not be suitable for passing to another resource.
 
@@ -414,7 +413,7 @@ After testing and validating your functions, you can incorporate them into your 
 
 ----
 
-## Configure Resources Using Dynamic Block
+## 8G: Configure Resources Using Dynamic Block
 
 Dynamic blocks can be used inside resources / data sources / providers / provisioners.
 
@@ -433,11 +432,11 @@ A Word to the Wise:
 
 ----
 
-## Built-in Dependency Management
+## 8H: Describe Built-in Dependency Management (Order of Execution Based)
 
 Terraform analyses a configuration --> it creates a **resource graph** --> this lists out all the **resources** and their **dependencies**.
 
-This means that Terraform can create the resources in the correct order **and** can also create resources in parallel IF they are not interdependent.
+This means that Terraform can create the resources in the correct order AND can also create resources in parallel IF they are not interdependent.
 
 _What if Terraform isn't Doing what I Need / Expect?_
 
