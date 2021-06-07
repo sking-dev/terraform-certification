@@ -1,6 +1,6 @@
 # Objective 6: Navigate Terraform Workflow
 
-## Overview
+## 6A: Describe Terraform Workflow ( Write - Plan - Create )
 
 Behold the core workflow in Terraform!
 
@@ -11,19 +11,35 @@ Step:
 
 2. Preview changes                           = Plan
 
-3. Commit changes to target environment      = Apply (AKA Create)
-
-4. Remove deployment when no longer required = Destroy (AKA Delete)
-```
-
-NOTE: The first three steps tend to occur more frequently than step 4.
+3. Commit changes to target environment      = Create (AKA "Apply")
 
 ----
 
-## Initialise Working Directory
+4. Remove deployment when no longer required = Destroy (AKA "Delete")
+```
 
-```hcl
+NOTE: Steps 1 through 3 tend to occur more frequently than step 4.
+
+----
+
+## 6B: Initialise a Terraform Working Directory (terraform init)
+
+```bash
 terraform init
+
+# Arguments for this command.
+-backend-config
+
+-input
+
+# Set directory for required plugins - this prevents automatic installation - useful for regulated / highly secure environments.
+-plugin-dir
+
+# Set to "true" to force update to newest version of module / plugin allowed by constraints + update the lock file ('.terraform.lock.hcl' in version 0.14 onwards)
+-upgrade
+
+# If not specified, Terraform will initialise the current working directory.
+[DIR]
 ```
 
 A Golden Rule:
@@ -33,7 +49,7 @@ A Golden Rule:
 _What Does It Do?_
 
 - Prepares state storage
-  - Local **or** remote backend
+  - Local OR remote backend
   - Verifies access
     - But does **not** generate (write) state
 - Retrieves modules
@@ -53,25 +69,11 @@ This command can be rerun safely at any time BUT it only **needs** to be run aga
   - Provisioner
 - The **configured backend is changed**
 
-### Arguments for terraform init
-
-```plaintext
--backend-config
-
--input
-
--plugin-dir = set directory for required plugins - this prevents automatic installation - useful for regulated / highly secure environments
-
--upgrade = set to "true" to force update to newest version of module / plugin allowed by constraints + update the lock file ('.terraform.lock.hcl' in version 0.14 onwards)
-
-[DIR] = if not specified, Terraform will initialise the current working directory
-```
-
 ----
 
-## Validate a Configuration
+## 6C: Validate a Terraform Configuration (terraform validate)
 
-```hcl
+```bash
 terraform validate
 ```
 
@@ -100,7 +102,7 @@ The validation checks syntax for modules / providers / provisioners, so Terrafor
 
 NOTE: Be aware that `terraform validate` may pass invalid values if they conform to the 'string' type - "invalid" as in, not supported by the cloud provider resources.
 
-It doesn't appear to be within in the scope of the exam, but you use the `validation` block in Terraform 0.13 onwards to gain more control over input values.
+It doesn't appear to be within in the scope of the exam, but you can use the `validation` block in Terraform 0.13 onwards to gain more control over input values.
 
 ```hcl
 # Basic example.
@@ -124,10 +126,32 @@ variable "ami_id" {
 
 ----
 
-## Generate and Review Execution Plan
+## 6D: Generate and Review an Execution Plan for Terraform (terraform plan)
 
-```hcl
+```bash
 terraform plan
+
+# Arguments for this command.
+
+# Ask for input for variables if not directly set.  
+# Set to "false" for automation scenarios so it won't prompt for any input.
+-input=true
+
+# Specify destination file to save the execution plan so it can be used by a 'terraform apply' operation.
+-out=path
+
+# Refresh the state (defaults to "true")
+-refresh=false 
+
+# Set value for variable (can be used multiple times)
+-var 'wibble=wobble'
+
+# Specify a file that holds your variables (key/value pairs)
+-var-file=wibble
+
+# If not specified, Terraform will operate on the current working directory.
+[DIR]
+
 ```
 
 This commands includes syntax validation.
@@ -144,28 +168,30 @@ _When Should I Use It?_
 - As a check to validate the current configuration
 - To prepare to execute changes to the live environment
 
-### Arguments for terraform plan
-
-```plaintext
--input = set to "false" for automation scenarios (so it won't prompt for any input)
-
--out = specify destination file to save the execution plan --> can be used by 'terraform apply' operation
-
--refresh = refresh the state (defaults to "true")
-
--var = set value for variable (can be used multiple times)
-
--var-file = specify file that holds variables values (key/value pairs)
-
-[DIR] = if not specified, Terraform will operate on the current working directory
-```
-
 ----
 
-## Execute Changes to Infrastructure
+## 6E: Execute Changes to Infrastructure With Terraform (terraform apply)
 
-```hcl
+```bash
 terraform apply
+
+# Arguments for this command.
+# NOTE: If not specified, syntax follows that of 'terraform plan'.
+
+# Skip approval and proceed with changes.
+-auto-approve
+
+#  Path to backup the existing state file before modifying.
+-backup=path
+
+# Ask for input for variables if not directly set.
+-input=true
+
+-refresh
+
+-var
+
+-var-file
 ```
 
 This command prepares an execution plan (equivalent to `terraform plan`) OR it references a plan (file) that was created by `terraform plan`.
@@ -178,25 +204,20 @@ The changes are applied after approval is received:
 
 NOTE: If a saved execution plan is referenced, an execution plan is **not** generated and approval is **not** required i.e. changes in the plan file are applied toot sweet!
 
-### Arguments for terraform apply
-
-```plaintext
--auto-approve = skip approval and proceed with changes
-
--input
--refresh
--var
--var-file
-
-NOTE: Most of the above arguments are as per 'terraform plan'.
-```
-
 ----
 
-## Destroy Terraform Managed Infrastructure
+## 6E: Destroy Terraform Managed Infrastructure (terraform destroy)
 
-```hcl
+```bash
 terraform destroy
+
+# Arguments for this command.
+
+# Skip approval and proceed with changes.
+-auto-approve
+
+# Specify the target + dependencies to destroy (can be used multiple times)
+-target
 ```
 
 _When Should I Use This Command?_
@@ -206,17 +227,9 @@ This command is useful in the following scenarios.
 - To clean up development resources once a project has been delivered
 - To remove a testing environment used temporarily by CI/CD pipeline
 
-### Arguments for 'terraform destroy'
-
-```plaintext
--auto-approve = skip approval and proceed with changes
-
--target       = specify the target + dependencies to destroy (can be used multiple times)
-```
-
 ### To See What terraform destroy Will Do
 
-```hcl
+```bash
 terraform plan -destroy
 ```
 
