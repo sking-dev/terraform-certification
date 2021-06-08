@@ -125,11 +125,13 @@ There are three **primitive data types**.
 3. boolean = true / false
 ```
 
-Primitive types (can) have a **single** value.
+Primitive types have a **single** value.
 
-Whereas...
+----
 
-Complex types (can) have **multiple** values.
+_Whereas..._
+
+**Complex data types** have **multiple** values.
 
 There are two kinds of complex types.
 
@@ -205,7 +207,7 @@ resource "azurerm_linux_virtual_machine" "linux_vm" {
 
 ----------------
 
-# TODO: Add an example for 'set'.
+# TODO: Add example for 'set'.
 ```
 
 ### Structural Types
@@ -299,7 +301,53 @@ They can make IaC less human-readable => sometimes, specifying a bunch of instan
   - Use `count.index` to construct a value for an argument directly
     - E.g. `name = "webserver-${count.index}"`
 - Or use it in a function or reference to another object in the configuration
-  - TODO: Give an example here
+
+```hcl
+# Basic example.
+# Source: https://blog.boltops.com/2020/10/04/terraform-hcl-loops-with-count-and-for-each
+
+locals {
+  names = ["bob", "kevin", "stewart"]
+}
+resource "null_resource" "names" {
+  # Use 'length' function to set 'count' value.
+  count = length(local.names)
+  triggers = {
+    # Use 'count.index' value to get name’s actual value from the 'local.names' list
+    name = local.names[count.index]
+  }
+}
+output "names" {
+  value = null_resource.names
+}
+```
+
+```bash
+# The above Terraform code produces the following output.
+$ terraform apply -auto-approve
+Outputs:
+
+names = [
+  {
+    "id" = "5944721793170602916"
+    "triggers" = {
+      "name" = "bob"
+    }
+  },
+  {
+    "id" = "2105600370698729010"
+    "triggers" = {
+      "name" = "kevin"
+    }
+  },
+  {
+    "id" = "4326674858695036914"
+    "triggers" = {
+      "name" = "stewart"
+    }
+  },
+]
+```
 
 _When Should I Get Busy with `count`?_
 
@@ -324,7 +372,52 @@ For example:
 - Creating multiple objects based on a `list` or `map` of values
   - Create multiple storage accounts where the name of each storage account is derived from the `list` / `map` values.
 
-TODO: Give a better (preferably real world) example.
+```hcl
+# Example sourced from https://learn.hashicorp.com/tutorials/terraform/for-each?in=terraform/configuration-language
+
+# Define map for project configuration in variables.tf file.
+# for_each will iterate over map to configure each resource.
+
+variable "project" {
+  description = "Map of project names for configuration."
+  type        = map
+  default     = {
+    client-webapp = {
+      public_subnets_per_vpc  = 2,
+      private_subnets_per_vpc = 2,
+      instances_per_subnet    = 2,
+      instance_type           = "t2.micro",
+      environment             = "dev"
+    },
+    internal-webapp = {
+      public_subnets_per_vpc  = 1,
+      private_subnets_per_vpc = 1,
+      instances_per_subnet    = 2,
+      instance_type           = "t2.nano",
+      environment             = "test"
+    }
+  }
+}
+
+# Use for_each to iterate over project map in VPC module block of main.tf file.
+# This will create one VPC for each key/value pair in map.
+
+module "vpc" {
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "2.66.0"
+
+  for_each = var.project
+
+  cidr = var.vpc_cidr_block
+
+  azs             = data.aws_availability_zones.available.names
+  private_subnets = slice(var.private_subnet_cidr_blocks, 0, each.value.private_subnet_count)
+  public_subnets  = slice(var.public_subnet_cidr_blocks, 0, each.value.public_subnet_count)
+
+  enable_nat_gateway = true
+  enable_vpn_gateway = false
+}
+```
 
 ----
 
@@ -421,7 +514,41 @@ A `dynamic` block expression => one or more nested blocks.
 
 Values are retrieved from variables.
 
-TODO: Give (and spell) out the example from the study guide (p.93 of PDF)
+```hcl
+# Example sourced from https://www.terraform.io/docs/language/expressions/dynamic-blocks.html
+
+# Some resource types include repeatable nested blocks in their arguments.
+# These typically represent separate objects that are related to (or embedded within) the containing object.
+
+# E.g.
+
+resource "aws_elastic_beanstalk_environment" "tfenvtest" {
+  name = "tf-test-name" # can use expressions here
+
+  setting {
+    # but the "setting" block is always a literal block
+  }
+}
+
+# You can dynamically construct repeatable nested blocks like setting using a special dynamic block type, which is supported inside 'resource', 'data', 'provider', and 'provisioner' blocks.
+
+# E.g.
+
+resource "aws_elastic_beanstalk_environment" "tfenvtest" {
+  name                = "tf-test-name"
+  application         = "${aws_elastic_beanstalk_application.tftest.name}"
+  solution_stack_name = "64bit Amazon Linux 2018.03 v2.11.4 running Go 1.12.6"
+
+  dynamic "setting" {
+    for_each = var.settings
+    content {
+      namespace = setting.value["namespace"]
+      name = setting.value["name"]
+      value = setting.value["value"]
+    }
+  }
+}
+```
 
 A Word to the Wise:
 
